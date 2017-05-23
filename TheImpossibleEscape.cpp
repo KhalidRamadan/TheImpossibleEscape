@@ -10,8 +10,8 @@ int physWidth = 1400;
 int physHeight = 1000;
 int centerX = LogWidth/2;
 int centerY = logHeight/2;
-int mouseX = centerX;
-int mouseY = centerY;
+double mouseX = centerX;
+double mouseY = centerY;
 int sizeofcube = 5;
 vector<double> ColorBackground = {0.0, 0.0, 0.0};
 vector<GLuint> imageids;
@@ -90,14 +90,13 @@ vector<int> myPuzzle(10, 0);
 int Sq[5][4] =
 {
     {0, 0, 0, 0},
-    {45, 60, 65, 70},
-    {45, 50, 65, 60},
-    {45, 40, 65, 50},
-    {45, 30, 65, 40}
+    {900, 1600, 1200, 1800},
+    {900, 1400, 1200, 1600},
+    {900, 1200, 1200, 1400},
 };
 
 int vv[5] = {0, 0, 0, 0, 0};
-
+int switchx = 0;
 
 vector<pair<string, int> > llock(10, {"", 0});
 int openRooms = 0;
@@ -125,6 +124,7 @@ void displayinit();
 void DrawS(int x0, int y0, int x1, int y1, double r, double g, double b, string s);
 void mouse2(int x, int y);
 void mouse(int btn, int state, int x, int y);
+void displayHowTo();
 // functions....
 
 void NewGame()
@@ -200,7 +200,10 @@ void DrawS(int x0, int y0, int x1, int y1, double r, double g, double b, string 
     glVertex2i(x0, y1);
     glEnd();
     if(s[0] != ' ')
-        printText(s, x0 + ( (x1 - x0) / 2 ) - 5, y0 + (y1 - y0) / 2);
+    {
+        glColor3f(.4, 0.6, 0.4);
+        printText(s, x0 + ( (x1 - x0) / 2 ) - 100, y0 + (y1 - y0) / 2);
+    }
 }
 
 
@@ -213,30 +216,64 @@ void displayinit()
     glColor3f(0, 0, 0);
     printText(Namegame, 911, 2000);
     if(show++ > 10 == 0)
-            drawImg(1000, 1800, 1100, 1950, 0, imageids[P0]);
+        drawImg(1000, 1800, 1100, 1950, 0, imageids[P0]);
     else      drawImg(1000, 1800, 1100, 1950, 0, imageids[POLICE]);
     show %= 20;
     
+    int r = .2, g = .5, b = .6;
+    if(vv[1] == 0) DrawS(Sq[1][0], Sq[1][1], Sq[1][2], Sq[1][3], r, g, b, "How To Play");
+    else DrawS(Sq[1][0], Sq[1][1], Sq[1][2], Sq[1][3], 1 - r, 1 - g, 1 - b, "How To Play");
+    if(vv[2] == 0) DrawS(Sq[2][0], Sq[2][1], Sq[2][2], Sq[2][3],  r, g, b, "Play");
+    else DrawS(Sq[2][0], Sq[2][1], Sq[2][2], Sq[2][3],  1 - r, 1 - g, 1 - b, "Play");
+    if(vv[3] == 0) DrawS(Sq[3][0], Sq[3][1], Sq[3][2], Sq[3][3],  r, g, b, "EXIT");
+    else DrawS(Sq[3][0], Sq[3][1], Sq[3][2], Sq[3][3],  1 - r, 1 - g, 1 - b, "EXIT");
     
     
-
+    
 }
+
+
+void displayHowTo()
+{
+    drawImg(0, 0, LogWidth, logHeight, 0, imageids[COLOR]);
+    string Des = "The impossible Game  \n sgjewgnergjreooj  \n rgreger gregreg \n";
+    glColor3f(0, 0, 0);
+    printText(Des, 911, 2000);
+}
+
 
 
 void display (void)
 {
     glClear(GL_COLOR_BUFFER_BIT);
-    displayinit();
-   // displayText();
-   // displayPrison();
-   // displayPolice();
+    switch (switchx) {
+        case 0:
+            displayinit();
+            break;
+        case 1:
+            displayHowTo();
+            break;
+        case 2:
+            
+            displayText();
+            displayPrison();
+            displayPolice();
+            break;
+        case 3:
+            exit(1);
+            break;
+        default:
+            break;
+    }
+    
+    
     glutSwapBuffers();
     glFlush();
 }
 
 void printText(string s, int x, int y)
 {
-   // glColor3f(0, 1.0, 0.0);
+    // glColor3f(0, 1.0, 0.0);
     glRasterPos2d(x, y);
     for(int i = 0; i < s.size(); i++)
     {
@@ -279,7 +316,7 @@ void displayText()
     string prisoner = "Prisoner Number 0";
     string roomstate = "Room State : ";
     if(roomState[curRoom] & 2)
-         roomstate += "Open";
+        roomstate += "Open";
     else roomstate += "Closed";
     Room.back() += curRoom;
     prisoner.back() += RoomP[curRoom];
@@ -396,9 +433,9 @@ void displayPrison()
         if(teleportpow[i].second % 3 != 2)
             drawImg(roomplace[i].first + prisonerMove[i].first,
                     roomplace[i].second + prisonerMove[i].second,
-               roomplace[i].first + prisonerMove[i].first + prisonerW,
-                roomplace[i].second + prisonerMove[i].second + prisonerH, 0,
-                imageids[P0 + pic]);
+                    roomplace[i].first + prisonerMove[i].first + prisonerW,
+                    roomplace[i].second + prisonerMove[i].second + prisonerH, 0,
+                    imageids[P0 + pic]);
         if(teleportpow[i].second) teleportpow[i].second--;
         
     }
@@ -434,11 +471,11 @@ bool checkPrison(int x, int y, int curRoom)
         Ydown = 73;
         off = 100;
     }
-
+    
     if(x >= roomplace[curRoom].first + 40 && x <= roomplace[curRoom].first + roomW - prisonerW
        && y >= roomplace[curRoom].second + Ydown && y <= roomplace[curRoom].second + roomH - Yup)
         return 1;
-
+    
     if(roomState[curRoom] <= 1)
         return 0;
     
@@ -479,11 +516,11 @@ bool checkPrison(int x, int y, int curRoom)
 
 void unlock(int key)
 {
-
+    
     if(llock[curRoom].second == 1)
         return;
     llock[curRoom].first += char(key + '0');
-  //  cout << llock[curRoom].first << endl;
+    //  cout << llock[curRoom].first << endl;
     int n = (int)llock[curRoom].first.size();
     string comp = Puzzle[myPuzzle[curRoom]].second.substr(0, n);
     if(comp == llock[curRoom].first)
@@ -502,10 +539,10 @@ void unlock(int key)
     
 }
 
-
 void PrisonKeyboard(int key)
 {
-    
+    if(key == 27)
+        switchx = 0;
     int sh = glutGetModifiers();
     if(sh == GLUT_ACTIVE_SHIFT && openRooms != 10)
     {
@@ -522,7 +559,7 @@ void PrisonKeyboard(int key)
                 teleportpow[PP].second = teleportpow[curRoom].second = TELETIME;
                 RoomP[PP] = RoomP[curRoom];
                 RoomP[curRoom] = i;
-
+                
             }
         return;
     }
@@ -552,11 +589,12 @@ void easteregg(int key)
 
 void mouse2(int x, int y)
 {
+    if(switchx != 0) return;
     mouseX = x;
-    mouseX = 0.5 + 1.0 * mouseX * LogWidth / physWidth;
-    mouseY = physWidth - y;
-    mouseY = 0.5 + 1.0 * mouseY * logHeight / physHeight;
-    for(int i = 1; i <= 4; i++)
+    mouseX = 0.5 + (1.0 * mouseX * LogWidth) / (double)physWidth;
+    mouseY = physHeight - y;
+    mouseY = 0.5 + (1.0 * mouseY * logHeight) / (double)physHeight;
+    for(int i = 1; i <= 3; i++)
     {
         if(mouseX >= Sq[i][0] && mouseX <= Sq[i][2] && mouseY >= Sq[i][1] && mouseY <= Sq[i][3])
         {
@@ -569,22 +607,22 @@ void mouse2(int x, int y)
 
 void mouse(int btn, int state, int x, int y)
 {
+    if(switchx != 0) return;
     mouseX = x;
-    mouseX = 0.5 + 1.0 * mouseX * LogWidth / physWidth;
-    mouseY = physWidth - y;
-    mouseY = 0.5 + 1.0 * mouseY * logHeight / physHeight;
+    mouseX = (1.0 * mouseX * LogWidth) / (double)physWidth;
+    mouseY = physHeight - y;
+    mouseY = (1.0 * mouseY * logHeight) / (double)physHeight;
+    cout << mouseX << " " << mouseY << endl;
+    cout << x << " " << y << endl;
     if(btn == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
     {
-        for(int i = 1; i <= 4; i++)
+        for(int i = 1; i <= 3; i++)
         {
             if(mouseX >= Sq[i][0] && mouseX <= Sq[i][2] && mouseY >= Sq[i][1] && mouseY <= Sq[i][3])
             {
+                switchx = i;
             }
         }
-    }
-    if(btn == GLUT_LEFT_BUTTON && state == GLUT_UP)
-    {
-        
     }
 }
 
@@ -602,6 +640,8 @@ int main(int argc, char *argv[])
     timer(0);
     glutMainLoop();
 }
+
+
 
 
 
