@@ -236,7 +236,11 @@ void displayinit()
 void displayHowTo()
 {
     drawImg(0, 0, LogWidth, logHeight, 0, imageids[COLOR]);
-    string Des = "The impossible Game  \n sgjewgnergjreooj  \n rgreger gregreg \n";
+    string Des = "The impossible Game  \n"
+		"Move your prisoner with wasd\n"
+		"Switch active room with 0-9\n"
+		"Swap positions with shift+0-9 \n"
+		"Good Luck!\n";
     glColor3f(0, 0, 0);
     printText(Des, 911, 2000);
 }
