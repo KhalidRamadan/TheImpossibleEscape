@@ -416,7 +416,6 @@ void sufflePrisoners()
             prisonerMove[i].first += x, prisonerMove[i].second += y;
     }
 }
-// mohamadsss17@gmail.com
 void displayPrison()
 {
     bool f = 1;
