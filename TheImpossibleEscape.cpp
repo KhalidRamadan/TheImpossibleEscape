@@ -60,18 +60,18 @@ enum ids {
 
 vector< pair<string, string> > Puzzle =
 {
-    {"Hello", "1"},
-    {"bye", "314"},
-    {"marijuana", "420"},
+    {"avogadro constant", "623"},
+    {"pi", "314"},
+    {"2 ^ 5", "32"},
     {"Not found", "404"},
-    {"you are elite", "1337"},
+    {"Factorial 4", "24"},
     {"Fibonacci 9", "34"},
     {"Factorial 5", "120"},
-    {"solo(Dota)", "322"},
+    {"divisors of 8", "1248"},
     {"the game of life", "42"},
     {"Prime Number in order", "2357"},
-    {"111,111,111 x 111,111,111", "12345678987654321"},
-    {"The most popular favourite number", "7"},
+    {"even prime number", "2"},
+    {"divisors of 6", "1236"},
     {"682 one number is correct and well placed\n"
         "614 one number is correct but in wrong place\n"
         "206 two numbers are correct but in wrong place\n", "042"}
@@ -237,10 +237,10 @@ void displayHowTo()
 {
     drawImg(0, 0, LogWidth, logHeight, 0, imageids[COLOR]);
     string Des = "The impossible Game  \n"
-		"Move your prisoner with wasd\n"
-		"Switch active room with 0-9\n"
-		"Swap positions with shift+0-9 \n"
-		"Good Luck!\n";
+    "Move your prisoner with wasd\n"
+    "Switch active room with 0-9\n"
+    "Swap positions with shift+0-9 \n"
+    "Good Luck!\n";
     glColor3f(0, 0, 0);
     printText(Des, 911, 2000);
 }
@@ -416,7 +416,7 @@ void sufflePrisoners()
             prisonerMove[i].first += x, prisonerMove[i].second += y;
     }
 }
-
+// mohamadsss17@gmail.com
 void displayPrison()
 {
     bool f = 1;
